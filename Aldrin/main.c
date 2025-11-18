@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-//#include "acceleration.h" remove this if we will keep the contents of acceleration.h here
-
-extern void compute_acceleration(float *matrix, int *acceleration, int num_cars);
+#include "acceleration.h"
 
 int main() {
     int num_cars;
@@ -30,10 +28,11 @@ int main() {
     }
     
     // Read input matrix
-    printf("Enter matrix data (Initial_Velocity Final_Velocity Time for each car):\n");
-    for (int i = 0; i < num_cars * 3; i++) {
-        if (scanf("%f", &matrix[i]) != 1) {
-            fprintf(stderr, "Invalid input\n");
+    printf("Enter matrix data (Initial_Velocity, Final_Velocity, Time for each car):\n");
+    for (int i = 0; i < num_cars; i++) {
+        // Read three values per row with commas
+        if (scanf("%f, %f, %f", &matrix[i*3], &matrix[i*3 + 1], &matrix[i*3 + 2]) != 3) {
+            fprintf(stderr, "Invalid input format. Use: value1, value2, value3\n");
             free(matrix);
             free(acceleration);
             return 1;

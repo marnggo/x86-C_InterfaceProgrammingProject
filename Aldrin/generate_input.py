@@ -26,8 +26,8 @@ def generate_input(num_cars, output_file=None):
         # Time: 1-15 seconds
         t = random.uniform(1.0, 15.0)
         
-        # Format with 1 decimal place
-        lines.append(f"{vi:.1f} {vf:.1f} {t:.1f}")
+        # Format with 1 decimal place and commas
+        lines.append(f"{vi:.1f}, {vf:.1f}, {t:.1f}")
     
     # Output
     output = '\n'.join(lines)
