@@ -1,0 +1,13 @@
+Enter number of cars: Enter matrix data (Initial_Velocity, Final_Velocity, Time for each car):
+
+Output (Acceleration in m/s^2):
+-2
+0
+-1
+0
+8
+0
+-2
+2
+2
+6

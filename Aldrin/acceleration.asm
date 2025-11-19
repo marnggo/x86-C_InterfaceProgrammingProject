@@ -1,4 +1,5 @@
 section .data
+    align 4
     const_1000: dd 1000.0    ; For KM/H to M/H conversion
     const_3600: dd 3600.0    ; For M/H to M/S conversion
 
@@ -43,22 +44,23 @@ compute_acceleration:
     ; Load T (time) at matrix[rbx + 8]
     movss xmm2, [rcx + rbx + 8]
     
-    ; Convert Vi from KM/H to M/S
-    ; Vi_ms = (Vi * 1000) / 3600
-    mulss xmm0, xmm6            ; Vi * 1000
-    divss xmm0, xmm7            ; (Vi * 1000) / 3600
+    ; Convert Vi from KM/H to M/S: Vi_ms = Vi / 3.6
+    ; (KM/H * 1000m/km) / (3600s/h) = KM/H / 3.6
+    movss xmm3, xmm0            ; Copy Vi
+    mulss xmm3, xmm6            ; Vi * 1000
+    divss xmm3, xmm7            ; (Vi * 1000) / 3600 = Vi_ms
     
-    ; Convert Vf from KM/H to M/S
-    ; Vf_ms = (Vf * 1000) / 3600
-    mulss xmm1, xmm6            ; Vf * 1000
-    divss xmm1, xmm7            ; (Vf * 1000) / 3600
+    ; Convert Vf from KM/H to M/S: Vf_ms = Vf / 3.6
+    movss xmm4, xmm1            ; Copy Vf
+    mulss xmm4, xmm6            ; Vf * 1000
+    divss xmm4, xmm7            ; (Vf * 1000) / 3600 = Vf_ms
     
     ; Calculate acceleration = (Vf_ms - Vi_ms) / T
-    subss xmm1, xmm0            ; Vf_ms - Vi_ms
-    divss xmm1, xmm2            ; (Vf_ms - Vi_ms) / T
+    subss xmm4, xmm3            ; Vf_ms - Vi_ms
+    divss xmm4, xmm2            ; (Vf_ms - Vi_ms) / T
     
-    ; Convert float to integer
-    cvtss2si eax, xmm1          ; Convert to integer (truncates)
+    ; Convert float to integer (rounds towards zero/truncates)
+    cvtss2si eax, xmm4          ; Convert to integer
     
     ; Store result
     mov [rdx + r10], eax
